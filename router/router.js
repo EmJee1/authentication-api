@@ -14,16 +14,39 @@ const checkToken = require(`${__rootDir}/functions/check_token`)
 
 // get database queries
 const queryUserById = require(`${__rootDir}/database/queries/query_user_by_id`)
+const queryUserByName = require(`${__rootDir}/database/queries/query_user_by_name`)
 
 // define the routes
 // get user by id post request handler
 router.post('/getuser/id/:userid', (req, res) => {
-    const userid = req.params.userid
-    queryUserById(userid)
+    const userid = req.params.userid // get the user id to fetch data from, from the url parameter
+    let newToken // create a variable to store the new token
+    checkToken(req)
         .then(response => {
-            res.json({'response': response})
+            newToken = response
+            return queryUserById(userid)
+        })
+        .then(response => {
+            res.json({"token": newToken, "response": response})
         }).catch(err => {
-            res.json({'error': err})
+            res.json({"error": err})
+        })
+})
+
+// get user by username post request handler
+router.post('/getuser/username/:username', (req, res) => {
+    const username = req.params.username // get the user id to fetch data from, from the url parameter
+    let newToken // create a variable to store the new token
+    checkToken(req)
+        .then(response => {
+            newToken = response
+            return queryUserByName(username)
+        })
+        .then(response => {
+            res.json({"token": newToken, "response": response})
+        })
+        .catch(err => {
+            res.json({"error": err})
         })
 })
 
@@ -33,7 +56,7 @@ router.post('/token/validate', (req, res) => {
         .then(response => {
             res.json({'response': response})
         }).catch(err => {
-            res.json({'error': err})
+            res.json({"error": err})
         })
 })
 

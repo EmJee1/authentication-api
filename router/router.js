@@ -15,6 +15,7 @@ const checkToken = require(`${__rootDir}/functions/check_token`)
 // get database queries
 const queryUserById = require(`${__rootDir}/database/queries/query_user_by_id`)
 const queryUserByName = require(`${__rootDir}/database/queries/query_user_by_name`)
+const queryAllUsers = require(`${__rootDir}/database/queries/query_user_all`)
 
 // define the routes
 // get user by id post request handler
@@ -41,6 +42,22 @@ router.post('/getuser/username/:username', (req, res) => {
         .then(response => {
             newToken = response
             return queryUserByName(username)
+        })
+        .then(response => {
+            res.json({"token": newToken, "response": response})
+        })
+        .catch(err => {
+            res.json({"error": err})
+        })
+})
+
+// get all users post request handler
+router.post('/getuser/all', (req, res) => {
+    let newToken // create variable to store the new token
+    checkToken(req)
+        .then(response => {
+            newToken = response
+            return queryAllUsers()
         })
         .then(response => {
             res.json({"token": newToken, "response": response})

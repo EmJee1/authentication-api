@@ -1,0 +1,5 @@
+# ignore node_modules
+node_modules
+
+# ignore the .env because it contains secret information
+.env

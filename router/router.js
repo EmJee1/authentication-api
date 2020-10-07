@@ -23,7 +23,7 @@ router.post('/getuser/id/:userid', (req, res) => {
         .then(response => {
             res.json({'response': response})
         }).catch(err => {
-            console.log('Query error', err)
+            res.json({'error': err})
         })
 })
 
@@ -44,7 +44,7 @@ router.post('/login', (req, res) => {
             res.json({'valid_login': true, "token": response})
         })
         .catch(err => {
-            res.json({'valid_login': false, "message": err})
+            res.json({'valid_login': false, "error": err})
         })
 })
 
